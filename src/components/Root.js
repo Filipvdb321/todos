@@ -9,11 +9,12 @@ import Contact from './Contact';
 const Root = ({store}) => (
     <Provider store={store}>
         <Router history={browserHistory}>
-            <Route path="/" component={Home}/>
-            <Route path="/todo" component={TodoApp}/>
-            <Route path="/todo/(:filter)" component={TodoApp}/>
-            <Route path="/about" component={About}/>
-            <Route path="/contact" component={Contact}/>
+            <Route path="/" component={Home}>
+                <Route path="todo" component={TodoApp}/>
+                <Route path="todo/(:filter)" component={TodoApp}/>
+                <Route path="about" component={About}/>
+                <Route path="contact" component={Contact}/>
+            </Route>
         </Router>
     </Provider>
 );
