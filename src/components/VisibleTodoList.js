@@ -1,37 +1,59 @@
+import React, {Component} from 'react';
 import { connect } from 'react-redux';
-import { toggleTodo } from '../actions';
+import { withRouter } from 'react-router';
+import * as actions from '../actions';
+import { getVisibleTodos, getErrorMessage, getIsFetching } from '../reducers';
 import TodoList from './TodoList';
+import FetchError from './FetchError';
 
-const getVisibleTodos = (todos, filter) => {
-  switch (filter) {
-    case 'SHOW_ALL':
-      return todos;
-    case 'SHOW_COMPLETED':
-      return todos.filter(t => t.completed);
-    case 'SHOW_ACTIVE':
-      return todos.filter(t => !t.completed);
-    default:
-      throw new Error(`Unknown filter: ${filter}.`);
+class VisibleTodoList extends Component {
+  componentDidMount() {
+    this.fetchData();
+  }
+
+  componentDidUpdate(prevProps){
+    if(this.props.filter !== prevProps.filter){
+      this.fetchData();
+    }
+  }
+
+  fetchData() {
+    const {filter, fetchTodos} = this.props;
+    fetchTodos(filter).then(() => console.log('done'));
+  }
+  render(){
+    const {isFetching, errorMessage, toggleTodo, todos} = this.props;
+    if(isFetching && !todos.length){
+      return <p>Loading...</p>;
+    }
+    if(errorMessage && !todos.length){
+      return(
+          <FetchError
+            message={errorMessage}
+            onRetry={() => this.fetchData() }
+          />
+      )
+    }
+    return (
+        <TodoList
+            todos={todos}
+            onTodoClick={toggleTodo}
+        />);
+  }
+}
+const mapStateToProps = (state, { params }) => {
+  const filter = params.filter || 'all';
+  return {
+    todos: getVisibleTodos(state, filter || 'all'),
+    isFetching: getIsFetching(state, filter),
+    errorMessage : getErrorMessage(state, filter),
+    filter
   }
 };
 
-const mapStateToProps = (state) => {
-  return {
-    todos: getVisibleTodos(state.todos, state.visibilityFilter),
-  };
-};
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    onTodoClick: (id) => {
-      dispatch(toggleTodo(id));
-    },
-  };
-};
-
-const VisibleTodoList = connect(
+VisibleTodoList = withRouter(connect(
   mapStateToProps,
-  mapDispatchToProps
-)(TodoList);
+  actions
+)(VisibleTodoList));
 
 export default VisibleTodoList;
