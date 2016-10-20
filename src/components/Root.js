@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 import {Provider} from 'react-redux';
-import {Router, Route, browserHistory} from 'react-router';
+import {Router, Route, IndexRoute, browserHistory} from 'react-router';
 import Home from './Home';
 import TodoApp from './TodoApp';
 import About from './About';
@@ -10,7 +10,7 @@ const Root = ({store}) => (
     <Provider store={store}>
         <Router history={browserHistory}>
             <Route path="/" component={Home}>
-                <Route path="todo" component={TodoApp}/>
+                <IndexRoute component={TodoApp}/>
                 <Route path="todo/(:filter)" component={TodoApp}/>
                 <Route path="about" component={About}/>
                 <Route path="contact" component={Contact}/>
