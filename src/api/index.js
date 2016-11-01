@@ -15,11 +15,12 @@ export const addTodo = (text) =>
     todoService.create({text});
 
 export const toggleTodo = (id) => {
-    return todoService.get(id).then( (todo) => {
-       if(todo){
-           todo.completed = !todo.completed;
-           todoService.update(id, todo);
-           return todo;
-       }
+    return todoService.get(id).then(
+        (todo) => {
+           if(todo){
+               todo.completed = !todo.completed;
+               todoService.update(id, todo);
+               return todo;
+           }
     });
 };

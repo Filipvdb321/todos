@@ -36,6 +36,8 @@ class VisibleTodoList extends Component {
     if(isFetching && !todos.length){
       return <p>Loading...</p>;
     }
+    /*
+    enable if you want to see the errors instead of the local items when the api call failed
     if(errorMessage && !todos.length){
       return(
           <FetchError
@@ -43,7 +45,7 @@ class VisibleTodoList extends Component {
             onRetry={() => this.fetchData() }
           />
       )
-    }
+    }*/
     return (
         <TodoList
             todos={todos}
