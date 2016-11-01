@@ -4,6 +4,7 @@ import hooks from 'feathers-hooks';
 import io from 'socket.io-client';
 
 // Establish a Socket.io connection
+//TODO: make this an environment variable
 const socket = io('http://api.todoapp.com:8080');
 // Initialize our Feathers client application through Socket.io
 // with hooks and authentication.
