@@ -1,60 +1,25 @@
-import {v4} from 'node-uuid';
+import todoService from '../services';
 
-// This is a fake in-memory implementation of something
-// that would be implemented by calling a REST server.
-
-const fakeDatabase = {
-    todos: [{
-        id: v4(),
-        text: 'hey',
-        completed: true,
-    }, {
-        id: v4(),
-        text: 'ho',
-        completed: true,
-    }, {
-        id: v4(),
-        text: 'let’s go',
-        completed: false,
-    }],
+export const fetchTodos = (filter) => {
+    const params = { query : {}};
+    if(filter !== 'all'){
+        params.query.completed = filter === 'completed';
+    }
+    return todoService.find(params).then((res) => {
+        return res;
+    });
 };
 
-const delay = (ms) =>
-    new Promise(resolve => setTimeout(resolve, ms));
-
-export const fetchTodos = (filter) =>
-    delay(500).then(() => {
-        /*
-        //activate to enable random errors
-        if (Math.random() > 0.5) {
-            throw new Error('Boom!');
-        }*/
-        switch (filter) {
-            case 'all':
-                return fakeDatabase.todos;
-            case 'active':
-                return fakeDatabase.todos.filter(t => !t.completed);
-            case 'completed':
-                return fakeDatabase.todos.filter(t => t.completed);
-            default:
-                throw new Error('Unknown filter: ${filter}');
-        }
-    });
 
 export const addTodo = (text) =>
-    delay(500).then(() => {
-        const todo = {
-            id: v4(),
-            text,
-            completed: false
-        };
-        fakeDatabase.todos.push(todo);
-        return todo;
-    });
+    todoService.create({text});
 
-export const toggleTodo = (id) =>
-    delay(500).then(() => {
-        const todo = fakeDatabase.todos.find(t => t.id === id);
-        todo.completed = !todo.completed;
-        return todo;
+export const toggleTodo = (id) => {
+    return todoService.get(id).then( (todo) => {
+       if(todo){
+           todo.completed = !todo.completed;
+           todoService.update(id, todo);
+           return todo;
+       }
     });
+};
