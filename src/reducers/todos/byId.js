@@ -1,4 +1,7 @@
 const byId = (state = {}, action) => {
+    if(action.type ==='CLEAR_STORE'){
+        return {};
+    }
     if (action.response) {
         return {
             ...state,

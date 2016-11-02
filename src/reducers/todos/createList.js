@@ -4,6 +4,13 @@ const createList = (filter) => {
     const handleToggle = (state, action) => {
         const {result : toggleId, entities} = action.response;
         const { completed } = entities.todos[toggleId];
+        if(!state.find(id => id === toggleId)){
+            console.log('no todo found for this toggle :(');
+            if((filter === 'completed' && completed) || (filter==='active' && !completed)){
+                return [...state, toggleId];
+            }
+        }
+
         const shouldRemove = (
             (completed && filter === 'active') ||
             (!completed && filter === 'completed')
@@ -14,6 +21,9 @@ const createList = (filter) => {
     };
 
     const ids = (state = [], action) => {
+        if(action.type ==='CLEAR_STORE'){
+            return [];
+        }
         switch (action.type) {
             case 'FETCH_TODOS_SUCCESS':
                 return filter === action.filter ?

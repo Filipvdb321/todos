@@ -1,30 +1,30 @@
 import {combineReducers} from 'redux';
-import byId, * as fromById from './byId';
-import createList, * as fromList from './createList';
+import * as todos from './todos';
+import * as ioState from './iostate';
+import todoReducer from './todos';
+import ioStateReducer from './iostate';
 
-const listByFilter = combineReducers({
-    all: createList('all'),
-    active: createList('active'),
-    completed: createList('completed')
+const todoApp = combineReducers({
+    todos: todoReducer,
+    ioState: ioStateReducer
 });
 
-const todos = combineReducers({
-    byId,
-    listByFilter,
-});
+export default todoApp;
 
-export default todos;
-
-export const getVisibleTodos = (state, filter) => {
-    const ids = fromList.getIds(state.listByFilter[filter]);
-    return ids.map(id => fromById.getTodo(state.byId, id));
-};
+export const getVisibleTodos = (state, filter) =>
+    todos.getVisibleTodos(state.todos, filter);
 
 export const getIsFetching = (state, filter) =>
-    fromList.getIsFetching(state.listByFilter[filter]);
+    todos.getIsFetching(state.todos, filter);
 
 export const getTodoById = (state, id) =>
-    fromById.getTodo(state.byId, id);
+    todos.getTodoById(state.todos, id);
 
 export const getErrorMessage = (state, filter) =>
-    fromList.getErrorMessage(state.listByFilter[filter]);
+    todos.getErrorMessage(state.todos, filter);
+
+export const isConnected = (state) =>
+    ioState.isConnected(state.ioState);
+
+export const getActionDrafts = (state) =>
+    ioState.getActionDrafts(state.ioState);

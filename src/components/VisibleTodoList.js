@@ -2,23 +2,13 @@ import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import * as actions from '../actions';
-import { getVisibleTodos, getErrorMessage, getIsFetching } from '../reducers';
+import { getVisibleTodos, getErrorMessage, getIsFetching} from '../reducers';
 import TodoList from './TodoList';
-import FetchError from './FetchError';
-import todoService from '../services';
+//import FetchError from './FetchError';
 
 class VisibleTodoList extends Component {
   componentDidMount() {
     this.fetchData();
-
-    //refetch todos when a new todo is created or updated outside the app
-    //todo: improvement would be to filter out own added todos
-    todoService.on('created', todo => {
-      this.fetchData();
-    });
-    todoService.on('updated', todo => {
-      this.fetchData();
-    });
   }
 
   componentDidUpdate(prevProps){
@@ -31,8 +21,9 @@ class VisibleTodoList extends Component {
     const {filter, fetchTodos} = this.props;
     fetchTodos(filter).then(() => console.log('done'));
   }
+
   render(){
-    const {isFetching, errorMessage, toggleTodo, todos} = this.props;
+    const {isFetching, toggleTodo, todos} = this.props;
     if(isFetching && !todos.length){
       return <p>Loading...</p>;
     }

@@ -11,4 +11,4 @@ render(
   document.getElementById('root')
 );
 
-listenForServiceUpdates(store.dispatch);
+listenForServiceUpdates(store.dispatch, store.getState);
